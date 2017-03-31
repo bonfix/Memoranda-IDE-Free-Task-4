@@ -15,11 +15,13 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -441,6 +443,29 @@ public class TaskPanel extends JPanel {
 		});	
 
     }
+    
+    //Creating a custom input dialog (without cancel button) to get the actual lines of code
+    private int getActualLOC()
+    {
+        String[] options = {"OK"};
+        JPanel panel = new JPanel();
+        JTextField txt = new JTextField(10);
+        panel.add(new JLabel("Enter the actual Lines of Code: "));
+        panel.add(txt);
+
+         //Gets a number entered
+        int aloc = 0;
+        int selectedOption = JOptionPane.showOptionDialog(null, panel, "Actual LOC", JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options , options[0]);
+        if(selectedOption == 0)
+        {
+            try{
+            aloc  = Integer.parseInt(txt.getText());
+            }catch(Exception ex)
+            {}
+
+        }
+        return aloc;
+    }
 
     void editTaskB_actionPerformed(ActionEvent e) {
         Task t =
@@ -462,7 +487,10 @@ public class TaskPanel extends JPanel {
 		dlg.chkEndDate.setSelected(false);
 	else
 		dlg.chkEndDate.setSelected(true);
-		dlg.progress.setValue(new Integer(t.getProgress()));
+        
+        //LOC - added so as to detect changes in progress
+        int oldProgress = new Integer(t.getProgress());
+	dlg.progress.setValue(oldProgress);
  	dlg.chkEndDate_actionPerformed(null);	
         dlg.setVisible(true);
         if (dlg.CANCELLED)
@@ -480,7 +508,26 @@ public class TaskPanel extends JPanel {
         t.setDescription(dlg.descriptionField.getText());
         t.setPriority(dlg.priorityCB.getSelectedIndex());
         t.setEffort(Util.getMillisFromHours(dlg.effortField.getText()));
-        t.setProgress(((Integer)dlg.progress.getValue()).intValue());
+         //LOC save loc on edit
+        int newLoc = 0;
+        try{
+            newLoc = Integer.parseInt(dlg.fieldLOC.getText());
+        }catch(Exception exc)
+        {}
+        t.setLoc(newLoc);
+        
+        //set progress
+        int progress = ((Integer)dlg.progress.getValue()).intValue();
+        t.setProgress(progress);
+        
+        //lOC if progress changed AND progress == 100%, it's completed, ask for actual LOC
+        if(oldProgress!=progress && progress==100)
+        {
+            //get actual lines of code
+            int aloc = getActualLOC();
+             t.setLoc(aloc);
+        }
+       
         
 //		CurrentProject.getTaskList().adjustParentTasks(t);
 
@@ -696,7 +743,23 @@ public class TaskPanel extends JPanel {
 		}
 		for (int i = 0; i < tocomplete.size(); i++) {
 			Task t = (Task)tocomplete.get(i);
+                        
 			t.setProgress(100);
+                        
+                       
+                        /*int ans = Integer.parseInt( JOptionPane.showInputDialog(null,
+                        "Text",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        null,
+                        null,
+                        "[sample text to help input]"));*/
+                        //JOptionPane.showInputDialog("Input <First Integer>");
+                        
+                         //LOC - get actual LOC - show dialog
+                       int aloc = getActualLOC();
+                        //set loc to be the actual loc
+                        t.setLoc(aloc);
+
 		}
 		taskTable.tableChanged();
 		CurrentStorage.get().storeTaskList(CurrentProject.getTaskList(), CurrentProject.get());

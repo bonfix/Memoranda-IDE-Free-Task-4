@@ -91,7 +91,7 @@ public class TaskDialog extends JDialog {
     
     //aDDED BY bonfix
     //PAnel for LOC
-    // JPanel jPanelLOC = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    //JPanel jPanelLOC = new JPanel(new FlowLayout(FlowLayout.LEFT));
      JLabel jLabelLOC = new JLabel();
      JTextField fieldLOC = new JTextField();
      
@@ -364,7 +364,7 @@ public class TaskDialog extends JDialog {
         jPanelEffort.add(jLabelEffort, null);
         jPanelEffort.add(effortField, null);
         
-        //LOC
+        //jPanel2.add(jPanelLOC, null);
          jPanelEffort.add(jLabelLOC, null);
         jPanelEffort.add(fieldLOC, null);
 
@@ -395,6 +395,11 @@ public class TaskDialog extends JDialog {
                 endDate.getModel().setValue(endCalFrame.cal.get().getCalendar().getTime());
             }
         });
+        
+         //LOC
+//        jPanel2.add(jPanelLOC, null);
+//         jPanelLOC.add(jLabelLOC, null);
+//        jPanelLOC.add(fieldLOC, null);
     }
 
 	public void setStartDate(CalendarDate d) {

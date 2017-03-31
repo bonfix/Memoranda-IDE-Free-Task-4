@@ -87,7 +87,7 @@ public class TaskImpl implements Task, Comparable {
         setAttr("effort", String.valueOf(effort));
     }
     
-    //LOC Bonfix
+    //LOC - get the LOC
     public int getLoc() {
     	Attribute attr = _element.getAttribute("loc");
     	if (attr == null) {
@@ -102,10 +102,34 @@ public class TaskImpl implements Task, Comparable {
     		}
     	}
     }
-    //LOC bonfix
+    //LOC - set LOC
     public void setLoc(int loc) {
         setAttr("loc", String.valueOf(loc));
     }
+    
+    //LOC - set Actual LOC
+     public void setActualLoc(int aloc){
+        setAttr("aloc", String.valueOf(aloc));
+    }
+     
+      //LOC - get the Actual LOC
+    public int getActualLoc() {
+    	Attribute attr = _element.getAttribute("aloc");
+    	if (attr == null) {
+    		return 0;
+    	}
+    	else {
+    		try {
+        		return Integer.parseInt(attr.getValue());
+    		}
+    		catch (NumberFormatException e) {
+    			return 0;
+    		}
+    	}
+    }
+    
+     
+ 
 	
 	/* 
 	 * @see net.sf.memoranda.Task#getParentTask()

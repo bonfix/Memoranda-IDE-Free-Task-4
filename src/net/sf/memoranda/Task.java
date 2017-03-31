@@ -75,8 +75,13 @@ public interface Task {
     void setEffort(long effort);
     long getEffort();
     
-    void setLoc(int effort);
+    //Add these to enable setting/getting of LOC
+    void setLoc(int loc);
     int getLoc();
+    
+    //Add these to enable setting/getting of actual LOC
+    void setActualLoc(int aloc);
+    int getActualLoc();
     
     void setDescription(String description);
     String getDescription();
